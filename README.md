@@ -1,6 +1,6 @@
-# Carms Web
+# Misa
 
-A private, Codex-inspired coding workspace for Vercel. This is a standalone Next.js app; it does not include or modify the original Carms desktop application.
+A private, Codex-inspired coding workspace for Vercel. This is a standalone Next.js app; it does not include or modify the original original desktop application.
 
 ## Features
 - Password-only login configured with environment variables.
