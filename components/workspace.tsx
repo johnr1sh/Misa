@@ -5,7 +5,8 @@ import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from "
 type Message = { role: "user" | "assistant"; content: string };
 type Thread = { id: string; title: string; updatedAt: number; messages: Message[] };
 
-const STORAGE_KEY = "carms.workspace.v1";
+const STORAGE_KEY = "misa.workspace.v1";
+const LEGACY_STORAGE_KEY = "carms.workspace.v1";
 const starters = [
   { icon: "⌘", title: "Build something", prompt: "Help me plan and build a new feature. Start by asking only what you need to know." },
   { icon: "⌕", title: "Find a bug", prompt: "Help me debug an issue. I'll share the relevant code and error." },
@@ -30,10 +31,12 @@ export default function Workspace() {
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_STORAGE_KEY);
       const parsed = saved ? JSON.parse(saved) as Thread[] : [];
       if (Array.isArray(parsed) && parsed.length) {
         setThreads(parsed); setActiveId(parsed[0].id);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+        localStorage.removeItem(LEGACY_STORAGE_KEY);
       } else {
         const first = makeThread(); setThreads([first]); setActiveId(first.id);
       }
@@ -93,7 +96,7 @@ export default function Workspace() {
     <main className="app-shell">
       <aside className={`sidebar ${sidebarOpen ? "sidebar-open" : ""}`}>
         <div className="sidebar-top">
-          <a className="brand" href="/" aria-label="Carms home"><span className="brand-mark small">c<span>.</span></span><span>carms</span></a>
+          <a className="brand" href="/" aria-label="Misa home"><span className="brand-mark small">M<span>.</span></span><span>Misa</span></a>
           <button className="icon-button mobile-close" onClick={() => setSidebarOpen(false)} aria-label="Close menu">×</button>
         </div>
         <button className="new-task" onClick={newTask}><span>＋</span> New task <kbd>⌘ K</kbd></button>
@@ -125,7 +128,7 @@ export default function Workspace() {
               {active.messages.map((message, index) => (
                 <article className={`message-row ${message.role}`} key={index}>
                   <div className={`message-avatar ${message.role}`}>{message.role === "user" ? "J" : "✳"}</div>
-                  <div className="message-content"><div className="message-author">{message.role === "user" ? "You" : "Carms"}</div><div className="message-text">{message.content}</div></div>
+                  <div className="message-content"><div className="message-author">{message.role === "user" ? "You" : "Misa"}</div><div className="message-text">{message.content}</div></div>
                 </article>
               ))}
               {busy && <div className="thinking"><span className="provider-dot" /> Mistral is thinking<span className="typing-dots">···</span></div>}
@@ -153,7 +156,7 @@ export default function Workspace() {
               <button className="send-button" type="submit" disabled={busy || !prompt.trim()} aria-label="Send message">{busy ? <span className="spinner" /> : "↑"}</button>
             </div>
           </form>
-          <p className="disclaimer">Carms can make mistakes. Review code and suggestions before using them.</p>
+          <p className="disclaimer">Misa can make mistakes. Review code and suggestions before using them.</p>
         </div>
       </section>
     </main>
