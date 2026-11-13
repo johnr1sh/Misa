@@ -33,7 +33,7 @@ export default function LoginPage() {
   return (
     <main className="login-shell">
       <div className="login-card">
-        <div className="brand-mark">c<span>.</span></div>
+        <div className="brand-mark">M<span>.</span></div>
         <p className="eyebrow">PRIVATE WORKSPACE</p>
         <h1>Good to have you back.</h1>
         <p className="muted login-copy">Your projects and thoughts, in one place.</p>
